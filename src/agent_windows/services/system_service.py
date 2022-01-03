@@ -13,7 +13,7 @@ class System():
       """
         What:     Start subprocess
         Purpose:  Start the capture of packets with windump
-        Will rotate capture-file every 1GB. 1000 * 1M bytes = 1G with -C flag
+       
       """
       
       try:
@@ -22,18 +22,13 @@ class System():
         
         #Windump path using fullpath of this file:
         wdump_path = os.path.dirname(full_path) + '\\windump.exe'
-        print(wdump_path)
-
         self.capture = subprocess.Popen([wdump_path, '-i','1','-w','../../../output/captured.pcap','-C','1000'],
                             stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE,
-                            creationflags=subprocess.CREATE_NEW_CONSOLE)
-        self.capture.wait()
-        time.sleep(10)
+                            stderr=subprocess.PIPE)
       except:
         raise ValueError("Error occured when starting windump")
       else:
-        print('Windump started')
+        print('SYSTEM: Windump started')
         return True
   
 
@@ -47,7 +42,7 @@ class System():
       except:
         raise ValueError("Error occured when stopping windump")
       else:
-        print('Windump stopped')
+        print('SYSTEM: Windump stopped')
         return True
       
 
@@ -61,7 +56,7 @@ class System():
         except Exception as e:
           raise ValueError(e)
         else:
-           print('NTP disabled')
+           print('SYSTEM: NTP disabled')
            return True
         
     
@@ -75,7 +70,7 @@ class System():
         except Exception as e:
           raise ValueError(e)
         else:
-           print('NTP enabled')
+           print('SYSTEM: NTP enabled')
            return True
 
 

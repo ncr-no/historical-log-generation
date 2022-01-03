@@ -23,7 +23,6 @@ class Clock():
 
     def set_clock(self, epoch):
         time = datetime.datetime.fromtimestamp(epoch)
-        print(time)
         try:
             win32api.SetSystemTime(time.year,time.month,0,
                                    time.day,time.hour,time.minute,time.second,time.microsecond)
@@ -53,11 +52,11 @@ class Clock():
         
         self.time_machine.daemon = True
         self.time_machine.start()
-        print("Time machine started")
+        print("> Time machine started")
 
     def stop_time_machine(self):
         self.time_machine.cancel()
-        print("Time machine stopped")
+        print("> Time machine stopped")
 
 if __name__ == '__main__':
     clock = Clock(1,2)
