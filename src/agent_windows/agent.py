@@ -59,7 +59,6 @@ class Agent():
     def prepare(self):
         try:
           self.system.disable_ntp()
-          self.system.start_windump()
           scheduler.gen_timeline(self.start, self.stop,'normal')
           self.getTimeline()
         except Exception as e:
@@ -102,16 +101,18 @@ class Agent():
         except Exception as e:
           raise SystemExit(e)
         self.clock.start_time_machine()
-        
+        self.system.start_windump()
         self.timeHit = False
         for idx, day in enumerate(self.timeline):
           print('Looking for events at day:')
           print(idx)
           for event in self.timeline[idx]["events"]:
+            
               print('New event:')
               print(json.dumps(event, indent=2))
               self.timeCheck(event["clock"][1])
               #Time for event is hit:
+              #agent.system.stop_windump()
 
               self.clock.stop_time_machine()
               self.browser.search_google(event["options"][0])

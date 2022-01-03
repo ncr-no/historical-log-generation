@@ -22,9 +22,10 @@ class System():
         
         #Windump path using fullpath of this file:
         wdump_path = os.path.dirname(full_path) + '\\windump.exe'
-        self.capture = subprocess.Popen([wdump_path, '-i','1','-w','../../../output/captured.pcap','-C','1000'],
+        self.capture = subprocess.Popen([wdump_path, '-i','3','-w','captured.pcap','-C','1000'],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
+        print(self.capture)
       except:
         raise ValueError("Error occured when starting windump")
       else:
@@ -38,7 +39,7 @@ class System():
         Purpose:  Stop the capture of packets with windump
       """
       try:
-        self.capture.kill()
+        self.capture.send_signal(subprocess.signal.SIGTERM)
       except:
         raise ValueError("Error occured when stopping windump")
       else:
@@ -77,7 +78,7 @@ class System():
 if __name__ == '__main__':
     system = System()
     try:
-      system.disable_ntp()
+      system.start_windump()
     except Exception as e:
       raise SystemExit(e)
     else:
