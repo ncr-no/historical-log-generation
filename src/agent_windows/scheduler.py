@@ -2,11 +2,13 @@ import datetime
 import json
 import calendar
 import random
+import os
 event_distribution_normal = [0,0,0,0,0,2,4,8,9,10,10,10,10,9,5,3,3,2,1,0,0,0,0,0]
 event_distribution_247 = [4,4,4,5,4,5,5,8,9,10,10,10,10,9,7,6,5,4,4,4,4,4,4,4]
 
-benign_template = json.load(open(r'E:\PRIV\HistoricalLogGen\src\agent_windows\bases\benign_template.json'))
-malicious_template = json.load(open(r'E:\PRIV\HistoricalLogGen\src\agent_windows\bases\malicious_template.json'))
+script_dir = os.path.dirname(__file__)
+benign_template = json.load(open(os.path.join(script_dir, 'bases\\benign_template.json')))
+malicious_template = json.load(open(os.path.join(script_dir, 'bases\\malicious_template.json')))
 
 day_base = {
     "date": "",
@@ -42,11 +44,13 @@ def save_timeline(timeline):
         outfile.write(json_object)
 
 def gen_timeline(start,end,schedule):
-    print('Generating timeline')
-    print(start,end,schedule)
+    print('> Generating timeline')
+    print('>',start,end,schedule)
     start_time = datetime.datetime.strptime(start, "%d/%m/%Y")
     stop_time = datetime.datetime.strptime(end, "%d/%m/%Y")
     number_of_days= (stop_time-start_time).days
+    if number_of_days == 0:
+        number_of_days = 1
     timeline = [None] * number_of_days
 
     # Generate base for timeline
