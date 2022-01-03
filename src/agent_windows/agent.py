@@ -83,9 +83,9 @@ class Agent():
 
     def timeCheck(self,eventTime):
         while not self.timeHit:
-            print(self.timehit)
-            print(eventTime, self.clock.currenttime)
+            print('Client clock seconds until next event:',eventTime - int(self.clock.currenttime))
             if(eventTime < self.clock.currenttime):
+                print('> EVENT TIME HIT')
                 self.timeHit = True
                 return True
             else:
@@ -95,18 +95,17 @@ class Agent():
 
     def generate(self):
         startday = datetime.datetime.strptime(self.start, "%d/%m/%Y").timestamp()
-        stopday = 1641254400
+        stopday = datetime.datetime.strptime(self.start + ' 23:59:59', "%d/%m/%Y %H:%M:%S").timestamp()
+        print(stopday)
         try:
           self.clock.set_clock(startday)
         except Exception as e:
           raise SystemExit(e)
         self.clock.start_time_machine()
         
-        print(self.clock.currenttime)
-        print(len(self.timeline[0]['events']))
         self.timeHit = False
         for idx, day in enumerate(self.timeline):
-          print('New day:')
+          print('Looking for events at day:')
           print(idx)
           for event in self.timeline[idx]["events"]:
               print('New event:')
@@ -119,11 +118,10 @@ class Agent():
               self.timeHit = False
               self.clock.start_time_machine()
 
-        #while(nextevent.clock < self.currenttime):
-            #read system time every 1 second
-        #    self.currenttime = self.clock.get_time()
+        # No more events. Run until stop date, end of day
+        self.timeCheck(stopday)
         self.clock.stop_time_machine()
-        print('END OF GENERATE')
+        print('> END OF GENERATE')
         
   
     def getTimeline(self):
@@ -142,9 +140,9 @@ agent = Agent()
 
 if __name__ == '__main__':   
     if isAdmin():
-        print("Is admin, continuing.")
+        print("SYSTEM: Is admin, continuing.")
     else:
-        print("Administrator privileges are required to run this program.")
+        print("SYSTEM: Administrator privileges are required to run this program.")
         exit()
         
       # Argument for API
@@ -161,7 +159,7 @@ if __name__ == '__main__':
         print('API')
         api_service = Thread(target=app.run,kwargs={'port':8080})
         api_service.start()
-        print('api stopped')
+        print('> API stopped')
 
     else:
         if None in (args.start,args.stop,args.schedule,args.speed):
