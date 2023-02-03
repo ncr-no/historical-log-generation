@@ -1,0 +1,11 @@
+{
+  "searchGoogle": {
+    "url": "https://google.com"
+  },
+  "browseURL": {
+    "options": [
+      "https://www.google.com",
+      "https://www.vg.no"
+    ]
+  }
+}
