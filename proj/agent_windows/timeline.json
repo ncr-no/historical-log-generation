@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Search on google",
+    "time": "1675508400",
+    "module": "browser",
+    "type": "search_google",
+    "options": [
+      "how to make a sandwich",
+      "how to make a cake",
+      "how to make a pizza"
+    ]
+  },
+  {
+    "name": "Browse URL",
+    "time": "1675510200",
+    "module": "browser",
+    "type": "browse_url",
+    "options": [
+      "https://www.google.com",
+      "https://www.vg.no"
+    ]
+  }
+]
