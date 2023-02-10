@@ -1,4 +1,4 @@
-import win32api
+from win32 import win32api
 class Clock():
     def __init__(self):
         print('asd')
