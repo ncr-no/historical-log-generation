@@ -22,7 +22,6 @@ class Agent():
     def __init__(self):
         #self.browser = Browser()
         #self.clock = Clock()
-        print('initiated')
         self.timeline = timeline
 
     def register(self):
@@ -41,9 +40,14 @@ class Agent():
     def startGen(self):
         for event in self.timeline:
           print(event)
+    
+    def getTimeline(self):
+        print('getTimeline()')
+        #call generate timeline function
 
 if __name__ == '__main__':
     agent = Agent()
     print(agent.get_system_info())
+
     #agent.clock.test()
     #agent.browser.search_google("kakeoppskrift")

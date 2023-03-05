@@ -1,0 +1,28 @@
+[
+    {
+        "name": "Browse website",
+        "classification": "benign",
+        "clock": [],
+        "module": "browser",
+        "method": "browse_url",
+        "options": [
+            [
+                "https://vg.no",
+                "https://helseboka.no"
+            ]
+        ]
+    },
+    {
+        "name": "Search google",
+        "classification": "benign",
+        "clock": "",
+        "module": "browser",
+        "method": "search_google",
+        "options": [
+            [
+                "how to make a cake",
+                "how to tame a dragon"
+            ]
+        ]
+    }
+]

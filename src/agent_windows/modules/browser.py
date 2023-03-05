@@ -34,7 +34,7 @@ class Browser():
             ChromeDriverManager().install()), options=options)
         self.driver = driver
 
-    # Function for browsing a website, and clicking random href after random delay
+    
     def browse_url(self, url):
         """ Function for browsing a specific webpage """
         self.driver.get(url)

