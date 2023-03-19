@@ -4,16 +4,14 @@ import calendar
 import random
 event_distribution_old = [0,0,0,0,1,2,5,9,10,10,7,8,7,7,7,7,4,2,1,0,0,0,0,0]
 event_distribution = [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
-benign_template = json.load(open('./bases/benign_template.json'))
-malicious_template = json.load(open('./bases/malicious_template.json'))
-
+benign_template = json.load(open(r'src\agent_windows\bases\benign_template.json'))
+malicious_template = json.load(open(r'src\agent_windows\bases\malicious_template.json'))
 
 day_base = {
     "date": "",
     "day_of_week" : "",
     "number_of_events" : "",
     "events" : [
-
     ]
 }
 
@@ -39,7 +37,7 @@ def get_event(event_type,time):
 def save_timeline(timeline):
     #Serialize and save timeline
     json_object = json.dumps(timeline, indent=2, sort_keys=True, default=str)
-    with open('timeline.json','w') as outfile:
+    with open('timeline2.json','w') as outfile:
         outfile.write(json_object)
 
 def gen_timeline(start,end):
@@ -58,12 +56,12 @@ def gen_timeline(start,end):
             # for each hour in WEEKDAYS
             for hour in range(0,23):
                 #get number of interactions for that hour
-                hourly_interactions = event_distribution_old[hour]
+                hourly_interactions = event_distribution[hour]
                 
                 #for all interactions
                 for i in range (0,hourly_interactions):
                     tmp_event = get_event('benign',start_time + datetime.timedelta(days=n,hours=hour))
-                    print(tmp_event['clock'])
+                    
                     day['events'].append(tmp_event)
                 # sort the events
                 day['events'] = sorted(day['events'],key=lambda x: x['clock'][1])
@@ -72,8 +70,13 @@ def gen_timeline(start,end):
         timeline[n] = day
 
     #Serialize and save timeline to file
-    save_timeline(timeline)
+    try:
+      save_timeline(timeline)
+      return True
+    except:
+      return False
+    
     #print(json.dumps(timeline, indent=2, sort_keys=True, default=str))
 
- 
-gen_timeline('01/01/2022', '01/02/2022')
+
+gen_timeline('03/01/2022', '04/01/2022')

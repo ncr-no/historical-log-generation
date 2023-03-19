@@ -5,6 +5,7 @@
         "clock": [],
         "module": "browser",
         "method": "browse_url",
+        "done" : false,
         "options": [
             [
                 "https://vg.no",
@@ -18,6 +19,7 @@
         "clock": "",
         "module": "browser",
         "method": "search_google",
+        "done" : false,
         "options": [
             [
                 "how to make a cake",

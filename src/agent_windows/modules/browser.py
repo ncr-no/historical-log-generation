@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 class Browser():
     """ Main class for browsing websites using chrome """
     def __init__(self):
+        print('Class:Browser Initialized')
         # Set custom flags to ignore SSL errors if timestamp is wrong
         options = webdriver.ChromeOptions()
         options.add_argument("--ignore-certificate-errors")
