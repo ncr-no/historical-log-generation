@@ -1,8 +1,7 @@
 import json
-import datetime
 from time import sleep
-import platform
 import socket
+import threading
 from types import SimpleNamespace
 from modules.browser import Browser
 from modules.clock import Clock
@@ -21,11 +20,12 @@ class Agent():
     """ Main class for administering the agent """
     currenttime = 0
     timeline = timeline
+    timehit = False
     
     def __init__(self):
         self.browser = Browser()
-        self.clock = Clock(1,2)
-        self.generate()
+        self.clock = Clock(0.1,1)
+        sleep(2)
         #self.timeline = timeline
 
 
@@ -43,17 +43,37 @@ class Agent():
         fqdn = socket.getfqdn()
         return hostname,fqdn
 
+    def timeCheck(self,eventTime):
+        while not self.timeHit:
+            print(self.timehit)
+            print(eventTime, self.clock.currenttime)
+            if(eventTime < self.clock.currenttime):
+                self.timeHit = True
+                return True
+            else:
+                sleep(1)
+        return
+
+
     def generate(self):
-        startday = 1641168000
+        startday = 1641196325
         stopday = 1641254400
         self.clock.set_clock(startday)
         self.clock.start_time_machine()
         
+        print(self.clock.currenttime)
+        print(len(timeline[0]['events']))
+        self.timeHit = False
         for event in timeline[0]["events"]:
-            
-            while event["clock"][1] < self.clock.currenttime:
-                self.clock.stop_time_machine()
-                print('true')
+            print('New event:')
+            print(json.dumps(event, indent=2))
+            self.timeCheck(event["clock"][1])
+            #Time for event is hit:
+
+            self.clock.stop_time_machine()
+            self.browser.search_google(event["options"][0])
+            self.timeHit = False
+            self.clock.start_time_machine()
                 
         #while(nextevent.clock < self.currenttime):
             #read system time every 1 second
@@ -67,8 +87,8 @@ class Agent():
 
 if __name__ == '__main__':
     agent = Agent()
-    print(agent.get_system_info())
-    print('testtetstetset')
+    
+    threading.Thread(target=agent.generate(), daemon=True).start()
     #agent.browser.search_google("how to slay a dragon")
     #agent.clock.test()
     #agent.browser.search_google("kakeoppskrift")

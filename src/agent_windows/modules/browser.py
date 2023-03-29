@@ -14,26 +14,23 @@ class Browser():
     def __init__(self):
         print('Class:Browser Initialized')
         # Set custom flags to ignore SSL errors if timestamp is wrong
-        options = webdriver.ChromeOptions()
-        options.add_argument("--ignore-certificate-errors")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--ignore-ssl-errors")
-        options.add_argument("--ignore-certificate-errors-spki-list")
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument("--ignore-certificate-errors")
+        self.options.add_argument("--disable-extensions")
+        self.options.add_argument("--ignore-ssl-errors")
+        self.options.add_argument("--ignore-certificate-errors-spki-list")
         
         # Disable popups, notifications and hwaccel
-        options.add_argument("disable-popup-blocking")
-        options.add_argument('--disable-blink-features=AutomationControlled') # helps mitigate bot detection 
-        options.add_argument("disable-notifications")
-        options.add_argument("disable-gpu")  # disable hw acceleration
+        self.options.add_argument("disable-popup-blocking")
+        self.options.add_argument('--disable-blink-features=AutomationControlled') # helps mitigate bot detection 
+        self.options.add_argument("disable-notifications")
+        self.options.add_argument("disable-gpu")  # disable hw acceleration
 
         # Supress logging of various I/O units in Chrome
-        options.add_experimental_option(
+        self.options.add_experimental_option(
             'excludeSwitches', ['enable-logging'])
 
         # Create driver for Chrome (can be created for Firefox if desired )
-        driver = webdriver.Chrome(service=Service(
-            ChromeDriverManager().install()), options=options)
-        self.driver = driver
 
     
     def browse_url(self, url):
@@ -41,18 +38,21 @@ class Browser():
         self.driver.get(url)
 
     def search_google(self, query):
+        driver = webdriver.Chrome(service=Service(
+            ChromeDriverManager().install()), options=self.options)
+        
         """ Function for searching google """
         print("Searching google for: " + query)
-        self.driver.get("https://www.google.no")
+        driver.get("https://www.google.no")
 
         # New browser, have to accept ToC
-        self.driver.find_element(By.ID, "L2AGLb").click()
+        driver.find_element(By.ID, "L2AGLb").click()
 
         # REALISM: Sleep for a random time before typing and searching
         time.sleep(random.randint(1, 5))
 
         # Find search box, type in query and enter.
-        search = self.driver.find_element(by=By.NAME, value="q")
+        search = driver.find_element(by=By.NAME, value="q")
         search.send_keys(query)
         search.send_keys(Keys.RETURN)
         time.sleep(2)
@@ -63,14 +63,15 @@ class Browser():
         print("Getting page: " + str(page))
         # Click next page until we reach the page we want to be on
         while current_page < page:
-            next_button = self.driver.find_element(
+            next_button = driver.find_element(
                 by=By.XPATH, value="//*[contains(local-name(), 'span') and \ncontains(text(), 'Neste')]")
             next_button.click()
             current_page = current_page+1
         
         # Wait until results are visible and gather the resutls on the page
-        WebDriverWait(self.driver,5).until(EC.visibility_of_element_located((By.XPATH,"//div[@class='yuRUbf']/a")))
-        results = self.driver.find_elements(by=By.XPATH, value="//div[@class='yuRUbf']/a")  # finds webresults  
+        # error thrown here on dragon once
+        WebDriverWait(driver,5).until(EC.visibility_of_element_located((By.XPATH,"//div[@class='yuRUbf']/a")))
+        results = driver.find_elements(by=By.XPATH, value="//div[@class='yuRUbf']/a")  # finds webresults  
                 
         # REALISM: Sleep for a random time before clicking on a link
         time.sleep(random.randint(1, 5))
@@ -85,7 +86,7 @@ class Browser():
             print("No link clicked")
             
         time.sleep(2)#
-        self.driver.quit()
+        driver.close()
 
 
 if __name__ == '__main__':
