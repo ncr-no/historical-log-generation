@@ -13,8 +13,16 @@ with open('timeline.json') as f:
     timeline = json.load(f)
     #print(json.dumps(timeline, indent=2))
     #time = datetime.datetime.fromtimestamp(event.)
-    
     #print(json.dumps(timeline[0]["events"], indent=2, sort_keys=True, default=str))
+
+fields = {'name':clean_name,'email':clean_email}
+
+for key in fields:
+    fields[key]()
+
+
+
+
 
 class Agent():
     """ Main class for administering the agent """
@@ -24,8 +32,15 @@ class Agent():
     
     def __init__(self):
         self.browser = Browser()
+        self.powershell = Powershell()
         self.clock = Clock(0.1,1)
-        sleep(2)
+
+        methods = { 
+            'browse_url': self.browser.browse_url, 
+            'search_google':self.browser.search_google, 
+            'upload_file':self.powershell.upload_file,
+            'download_file':self.powershell.download_file
+            }
         #self.timeline = timeline
 
 
@@ -64,22 +79,25 @@ class Agent():
         print(self.clock.currenttime)
         print(len(timeline[0]['events']))
         self.timeHit = False
-        for event in timeline[0]["events"]:
-            print('New event:')
-            print(json.dumps(event, indent=2))
-            self.timeCheck(event["clock"][1])
-            #Time for event is hit:
 
-            self.clock.stop_time_machine()
-            self.browser.search_google(event["options"][0])
-            self.timeHit = False
-            self.clock.start_time_machine()
+        # For each day in the timeline
+        for idx,day in timeline:
+            print(day["date"])
+
+            # For each event in a day 
+            for event in timeline[idx]["events"]:
+                print('New event:')
+                print(json.dumps(event, indent=2))
+
+                # Will stay at timeCheck until its time to do next event
+                self.timeCheck(event["clock"][1])
                 
-        #while(nextevent.clock < self.currenttime):
-            #read system time every 1 second
-        #    self.currenttime = self.clock.get_time()
-
-        
+                #Time for event is hit. Stop and do action:
+                self.clock.stop_time_machine()
+                #methods[event["method"]](event["options"][0]) # TO BE TESTED
+                self.browser.search_google(event["options"][0])
+                self.timeHit = False
+                self.clock.start_time_machine()    
   
     def getTimeline(self):
         print('getTimeline()')
