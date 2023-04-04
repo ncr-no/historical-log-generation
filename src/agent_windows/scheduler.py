@@ -2,10 +2,10 @@ import datetime
 import json
 import calendar
 import random
-event_distribution_old = [0,0,0,0,1,2,5,9,10,10,7,8,7,7,7,7,4,2,1,0,0,0,0,0]
+event_distribution_old = [0,0,0,0,0,2,4,8,9,10,10,10,10,9,5,3,3,2,1,0,0,0,0,0]
 event_distribution = [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
-benign_template = json.load(open(r'src\agent_windows\bases\benign_template.json'))
-malicious_template = json.load(open(r'src\agent_windows\bases\malicious_template.json'))
+benign_template = json.load(open(r'/Users/christianisnes/NodeJS/Priv/HistoricalLogGen/src/agent_windows/bases/benign_template.json'))
+malicious_template = json.load(open(r'/Users/christianisnes/NodeJS/Priv/HistoricalLogGen/src/agent_windows/bases/malicious_template.json'))
 
 day_base = {
     "date": "",
@@ -56,7 +56,7 @@ def gen_timeline(start,end):
             # for each hour in WEEKDAYS
             for hour in range(0,23):
                 #get number of interactions for that hour
-                hourly_interactions = event_distribution[hour]
+                hourly_interactions = event_distribution_old[hour]
                 
                 #for all interactions
                 for i in range (0,hourly_interactions):
@@ -79,4 +79,4 @@ def gen_timeline(start,end):
     #print(json.dumps(timeline, indent=2, sort_keys=True, default=str))
 
 
-gen_timeline('03/01/2022', '04/01/2022')
+gen_timeline('01/01/2022', '07/01/2022')
