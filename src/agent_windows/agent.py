@@ -2,10 +2,11 @@ import json
 from time import sleep
 import socket
 import threading
-from types import SimpleNamespace
 from modules.browser import Browser
 from modules.clock import Clock
 from services.system_service import System
+import os
+os.environ['WDM_SSL_VERIFY']='0'
 #import services.api_service
 
 #specify encoding to avoid UnicodeDecodeError
@@ -24,7 +25,8 @@ class Agent():
     
     def __init__(self):
         self.browser = Browser()
-        self.clock = Clock(0.1,1)
+        self.clock = Clock(0.1,2)
+        self.system = System()
         sleep(2)
         #self.timeline = timeline
 
@@ -64,21 +66,25 @@ class Agent():
         print(self.clock.currenttime)
         print(len(timeline[0]['events']))
         self.timeHit = False
-        for event in timeline[0]["events"]:
-            print('New event:')
-            print(json.dumps(event, indent=2))
-            self.timeCheck(event["clock"][1])
-            #Time for event is hit:
+        for idx, day in enumerate(timeline):
+          print('New day:')
+          print(idx)
+          for event in timeline[idx]["events"]:
+              print('New event:')
+              print(json.dumps(event, indent=2))
+              self.timeCheck(event["clock"][1])
+              #Time for event is hit:
 
-            self.clock.stop_time_machine()
-            self.browser.search_google(event["options"][0])
-            self.timeHit = False
-            self.clock.start_time_machine()
-                
+              self.clock.stop_time_machine()
+              event['module'].event['method']()
+              self.timeHit = False
+              self.clock.start_time_machine()
+
         #while(nextevent.clock < self.currenttime):
             #read system time every 1 second
         #    self.currenttime = self.clock.get_time()
-
+        self.clock.stop_time_machine()
+        print('END OF GENERATE')
         
   
     def getTimeline(self):
@@ -87,8 +93,7 @@ class Agent():
 
 if __name__ == '__main__':
     agent = Agent()
-    
+    agent.system.disable_ntp()
     threading.Thread(target=agent.generate(), daemon=True).start()
-    #agent.browser.search_google("how to slay a dragon")
-    #agent.clock.test()
-    #agent.browser.search_google("kakeoppskrift")
+    agent.system.enable_ntp()
+    print('END OF MAIN')

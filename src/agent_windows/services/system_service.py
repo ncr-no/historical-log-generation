@@ -15,6 +15,7 @@ class System():
           print(e.output)
           raise ValueError("Error occured when disabling NTP")
         else:
+           print('NTP disabled')
            return True
         
     
@@ -29,6 +30,7 @@ class System():
           print(e.output)
           raise ValueError("Error occured when disabling NTP")
         else:
+           print('NTP enabled')
            return True
     
 if __name__ == '__main__':

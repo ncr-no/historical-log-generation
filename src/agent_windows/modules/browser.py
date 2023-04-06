@@ -34,8 +34,12 @@ class Browser():
 
     
     def browse_url(self, url):
+        driver = webdriver.Chrome(service=Service(
+            ChromeDriverManager().install()), options=self.options)
         """ Function for browsing a specific webpage """
         self.driver.get(url)
+        time.sleep(7)
+        driver.close()
 
     def search_google(self, query):
         driver = webdriver.Chrome(service=Service(
@@ -46,47 +50,68 @@ class Browser():
         driver.get("https://www.google.no")
 
         # New browser, have to accept ToC
-        driver.find_element(By.ID, "L2AGLb").click()
-
-        # REALISM: Sleep for a random time before typing and searching
-        time.sleep(random.randint(1, 5))
-
-        # Find search box, type in query and enter.
-        search = driver.find_element(by=By.NAME, value="q")
-        search.send_keys(query)
-        search.send_keys(Keys.RETURN)
-        time.sleep(2)
-        
-        # REALISM: Consider moving to one of the next 2 pages
-        page = random.randint(1, 3)
-        current_page = 1
-        print("Getting page: " + str(page))
-        # Click next page until we reach the page we want to be on
-        while current_page < page:
-            next_button = driver.find_element(
-                by=By.XPATH, value="//*[contains(local-name(), 'span') and \ncontains(text(), 'Neste')]")
-            next_button.click()
-            current_page = current_page+1
-        
-        # Wait until results are visible and gather the resutls on the page
-        # error thrown here on dragon once
-        WebDriverWait(driver,5).until(EC.visibility_of_element_located((By.XPATH,"//div[@class='yuRUbf']/a")))
-        results = driver.find_elements(by=By.XPATH, value="//div[@class='yuRUbf']/a")  # finds webresults  
-                
-        # REALISM: Sleep for a random time before clicking on a link
-        time.sleep(random.randint(1, 5))
-        
-        # REALISM: 80% chance of clicking a link
-        if random.randint(1, 10) <= 8:
-            print("Link clicked")
-            # clicks on a random result
-            res_click = random.randint(0,len(results)-1)
-            results[res_click].click()
+        try:
+            WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "L2AGLb")))
+        except:
+            print('No ToC found')
+            driver.close()
         else:
-            print("No link clicked")
+          driver.find_element(By.ID, "L2AGLb").click()
+
+          # REALISM: Sleep for a random time before typing and searching
+          time.sleep(random.randint(1, 5))
+
+          # Find search box, type in query and enter.
+          search = driver.find_element(by=By.NAME, value="q")
+          search.send_keys(query)
+          search.send_keys(Keys.RETURN)
+          time.sleep(2)
+          
+          # REALISM: Consider moving to one of the next 2 pages
+          page = random.randint(1, 3)
+          current_page = 1
+          print("Getting page: " + str(page))
+          # Click next page until we reach the page we want to be on
+          while current_page < page:
+              try:
+                next_button = driver.find_element(
+                    by=By.XPATH, value="//*[contains(local-name(), 'span') and \ncontains(text(), 'Neste')]")
+              except:
+                print('failed, move on')
+                current_page = current_page+1
+              else:
+                current_page = current_page+1
+                next_button.click()
+              
+          
+          # Wait until results are visible and gather the resutls on the page
+          # error thrown here on dragon once
+          try:
+              WebDriverWait(driver,5).until(EC.visibility_of_element_located((By.XPATH,"//div[@class='yuRUbf']/a")))  
+          except:
+              print('No results found')
+              time.sleep(2)#
+              driver.close()
+          else:
+            results = driver.find_elements(by=By.XPATH, value="//div[@class='yuRUbf']/a")  # finds webresults  
+                    
+            # REALISM: Sleep for a random time before clicking on a link
+            time.sleep(random.randint(1, 5))
             
-        time.sleep(2)#
-        driver.close()
+            # REALISM: 80% chance of clicking a link
+            if random.randint(1, 10) <= 8:
+                print("Link clicked")
+                # clicks on a random result
+                res_click = random.randint(0,len(results)-1)
+                try:
+                  results[res_click].click()
+                except:
+                  print('failed to click link, move on')
+            else:
+                print("No link clicked")
+                
+            time.sleep(2)#
+            driver.close()
 
 
 if __name__ == '__main__':

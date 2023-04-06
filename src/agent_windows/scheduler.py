@@ -44,6 +44,7 @@ def gen_timeline(start,end):
     start_time = datetime.datetime.strptime(start, "%d/%m/%Y")
     stop_time = datetime.datetime.strptime(end, "%d/%m/%Y")
     number_of_days= (stop_time-start_time).days
+    
     timeline = [None] * number_of_days
 
     # Generate base for timeline
@@ -79,4 +80,4 @@ def gen_timeline(start,end):
     #print(json.dumps(timeline, indent=2, sort_keys=True, default=str))
 
 
-gen_timeline('01/01/2022', '07/01/2022')
+gen_timeline('01/01/2022', '14/01/2022')
