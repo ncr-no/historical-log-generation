@@ -4,8 +4,8 @@ import calendar
 import random
 event_distribution_old = [0,0,0,0,0,2,4,8,9,10,10,10,10,9,5,3,3,2,1,0,0,0,0,0]
 event_distribution = [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
-benign_template = json.load(open(r'/Users/christianisnes/NodeJS/Priv/HistoricalLogGen/src/agent_windows/bases/benign_template.json'))
-malicious_template = json.load(open(r'/Users/christianisnes/NodeJS/Priv/HistoricalLogGen/src/agent_windows/bases/malicious_template.json'))
+benign_template = json.load(open(r'E:\PRIV\HistoricalLogGen\src\agent_windows\bases\benign_template.json'))
+malicious_template = json.load(open(r'E:\PRIV\HistoricalLogGen\src\agent_windows\bases\malicious_template.json'))
 
 day_base = {
     "date": "",
@@ -37,7 +37,7 @@ def get_event(event_type,time):
 def save_timeline(timeline):
     #Serialize and save timeline
     json_object = json.dumps(timeline, indent=2, sort_keys=True, default=str)
-    with open('timeline2.json','w') as outfile:
+    with open('timeline.json','w') as outfile:
         outfile.write(json_object)
 
 def gen_timeline(start,end):
@@ -53,7 +53,7 @@ def gen_timeline(start,end):
         day = day_base.copy()
         day['date'] = current_date
         day['day_of_week'] = [current_date.weekday(),calendar.day_name[current_date.weekday()]]
-        if day['day_of_week'][0] in range(0,4):
+        if day['day_of_week'][0] in range(0,5):
             # for each hour in WEEKDAYS
             for hour in range(0,23):
                 #get number of interactions for that hour
