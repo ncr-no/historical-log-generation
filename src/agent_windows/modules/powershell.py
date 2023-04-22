@@ -31,4 +31,7 @@ class Powershell():
           raise ValueError("Error when uploading file")
         else:
            return True
-        
+
+if __name__ == '__main__':
+    PS = Powershell()
+    PS.search_google("how to slay a dragon")

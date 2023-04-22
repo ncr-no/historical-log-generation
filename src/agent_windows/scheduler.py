@@ -38,7 +38,7 @@ def get_event(event_type,time):
 def save_timeline(timeline):
     #Serialize and save timeline
     json_object = json.dumps(timeline, indent=2, sort_keys=True, default=str)
-    with open('file4.json','w') as outfile:
+    with open('timeline.json','w') as outfile:
         outfile.write(json_object)
 
 def gen_timeline(start,end,schedule):
@@ -64,7 +64,7 @@ def gen_timeline(start,end,schedule):
                     hourly_interactions = event_distribution_normal[hour]
                 else:
                     hourly_interactions = event_distribution_247[hour]
-                
+                    
                 #for all interactions
                 for i in range (0,hourly_interactions):
                     tmp_event = get_event('benign',start_time + datetime.timedelta(days=n,hours=hour))
@@ -74,12 +74,10 @@ def gen_timeline(start,end,schedule):
 
             # Generate malicious events if any
             if(random.randint(0,100) < 10):
-                print('malicious event')
                 # Generating malicious event
                 tmp_event = get_event('malicious',start_time + datetime.timedelta(days=n,hours=random.choice([21,22,23,1,2,3,4])))
                 day['events'].append(tmp_event)
                 day['events'] = sorted(day['events'],key=lambda x: x['clock'][1])
-
 
             # Add number of events to day
             day['number_of_events'] = len(day['events'])
@@ -88,8 +86,8 @@ def gen_timeline(start,end,schedule):
     #Serialize and save timeline to file
     try:
       save_timeline(timeline)
+      print('> Timeline generated successfully')
       return True
     except:
       return False
 
-gen_timeline('01/01/2022', '30/01/2022','normal')

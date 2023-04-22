@@ -24,17 +24,27 @@ class Clock():
     def set_clock(self, epoch):
         time = datetime.datetime.fromtimestamp(epoch)
         print(time)
-        win32api.SetSystemTime(time.year,time.month,0,
-                               time.day,time.hour,time.minute,time.second,time.microsecond)
-        self.currenttime = datetime.datetime.utcnow().timestamp()
-        return True
+        try:
+            win32api.SetSystemTime(time.year,time.month,0,
+                                   time.day,time.hour,time.minute,time.second,time.microsecond)
+        except Exception as e:
+            raise ValueError(e)
+        else:
+            self.currenttime = datetime.datetime.utcnow().timestamp()
+            return True
         
     def moveTime(self, time):
         tt = datetime.datetime.utcnow()
         tt = tt + datetime.timedelta(seconds=int(time)) # add the delta
         self.currenttime = tt.timestamp()
-        win32api.SetSystemTime(tt.year, tt.month, 0, tt.day,
-                               tt.hour, tt.minute,tt.second, 0)
+        
+        try:
+            win32api.SetSystemTime(tt.year, tt.month, 0, tt.day,
+                                  tt.hour, tt.minute,tt.second, 0)
+        except Exception as e:
+            raise ValueError(e)
+        else:
+          return True
 
     def start_time_machine(self):
         self.time_machine = SetInterval(self.interval, 

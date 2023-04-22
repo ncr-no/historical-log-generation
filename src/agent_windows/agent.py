@@ -4,6 +4,7 @@ import socket
 import threading
 from modules.browser import Browser
 from modules.clock import Clock
+import scheduler 
 from services.system_service import System
 import os
 import argparse
@@ -16,7 +17,6 @@ with open('timeline.json') as f:
     timeline = json.load(f)
     #print(json.dumps(timeline, indent=2))
     #time = datetime.datetime.fromtimestamp(event.)
-    
     #print(json.dumps(timeline[0]["events"], indent=2, sort_keys=True, default=str))
 
 class Agent():
@@ -33,11 +33,21 @@ class Agent():
         self.schedule = schedule
         self.speed = speed
 
+        print('##################')
         self.browser = Browser()
         self.clock = Clock(0.1,2)
         self.system = System()
+        print('##################')
         sleep(2)
         #self.timeline = timeline
+
+    def prepare(self):
+        try:
+          self.system.disable_ntp()
+          self.system.start_windump()
+        except Exception as e:
+          print('BREAKING ERROR')
+          raise SystemExit(e)
 
 
     def register(self):
@@ -69,7 +79,10 @@ class Agent():
     def generate(self):
         startday = 1640998800
         stopday = 1641254400
-        self.clock.set_clock(startday)
+        try:
+          self.clock.set_clock(startday)
+        except Exception as e:
+          raise SystemExit(e)
         self.clock.start_time_machine()
         
         print(self.clock.currenttime)
@@ -108,8 +121,9 @@ if __name__ == '__main__':
     parser.add_argument('--speed', type=int, required=True)
     args=parser.parse_args()
     agent = Agent(args.start,args.stop,args.schedule,args.speed)
+    scheduler.gen_timeline('01/01/2022', '30/01/2022','normal')
+    agent.prepare()
     
-    agent.system.disable_ntp()
     threading.Thread(target=agent.generate(), daemon=True).start()
     agent.system.enable_ntp()
     print('END OF MAIN')
