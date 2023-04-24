@@ -168,5 +168,6 @@ if __name__ == '__main__':
             agent.setargs(args.start,args.stop,args.schedule,args.speed)
             agent.prepare()
             agent.thread = Thread(target=agent.generate(), daemon=True).start()
+    agent.system.stop_windump()
     agent.system.enable_ntp()
     print('END')
