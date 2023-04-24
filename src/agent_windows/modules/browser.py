@@ -76,8 +76,9 @@ class Browser():
               try:
                 next_button = driver.find_element(
                     by=By.XPATH, value="//*[contains(local-name(), 'span') and \ncontains(text(), 'Neste')]")
-              except:
+              except Exception as e:
                 print('failed, move on')
+                print(e)
                 current_page = current_page+1
               else:
                 current_page = current_page+1
