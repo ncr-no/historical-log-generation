@@ -4,7 +4,6 @@ parser=argparse.ArgumentParser()
 
 def main(start,stop,schedule,speed,ip):
   print('RUN')
-    
 
 if __name__ == '__main__':
     parser.add_argument('--start', type=int, required=True, metavar='DDMMYYYY',help='Start date')

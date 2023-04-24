@@ -1,6 +1,7 @@
 import subprocess
-import time
 import os  
+import time
+
 class System():
     capture = None
 
@@ -25,7 +26,10 @@ class System():
 
         self.capture = subprocess.Popen([wdump_path, '-i','1','-w','../../../output/captured.pcap','-C','1000'],
                             stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
+                            stderr=subprocess.PIPE,
+                            creationflags=subprocess.CREATE_NEW_CONSOLE)
+        self.capture.wait()
+        time.sleep(10)
       except:
         raise ValueError("Error occured when starting windump")
       else:
@@ -71,7 +75,7 @@ class System():
         except Exception as e:
           raise ValueError(e)
         else:
-           print('NTP disabled')
+           print('NTP enabled')
            return True
 
 

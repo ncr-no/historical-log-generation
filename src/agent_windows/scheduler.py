@@ -42,6 +42,8 @@ def save_timeline(timeline):
         outfile.write(json_object)
 
 def gen_timeline(start,end,schedule):
+    print('Generating timeline')
+    print(start,end,schedule)
     start_time = datetime.datetime.strptime(start, "%d/%m/%Y")
     stop_time = datetime.datetime.strptime(end, "%d/%m/%Y")
     number_of_days= (stop_time-start_time).days

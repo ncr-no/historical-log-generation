@@ -1,38 +1,46 @@
 import json
-from time import sleep
 import socket
-import threading
-from modules.browser import Browser
-from modules.clock import Clock
-import scheduler 
-from services.system_service import System
-import os
+from flask import Flask
+from flask import request
 import argparse
+import sys
+import datetime
+import scheduler 
+from threading import Thread
+import ctypes, os
+from time import sleep
+from modules.clock import Clock
+from modules.browser import Browser
+from services.system_service import System
+
+app = Flask(__name__)
+api_service = None
+
 parser=argparse.ArgumentParser()
 os.environ['WDM_SSL_VERIFY']='0'
-#import services.api_service
 
 #specify encoding to avoid UnicodeDecodeError
-with open('timeline.json') as f:
-    timeline = json.load(f)
-    #print(json.dumps(timeline, indent=2))
-    #time = datetime.datetime.fromtimestamp(event.)
-    #print(json.dumps(timeline[0]["events"], indent=2, sort_keys=True, default=str))
+
+
+@app.route('/create', methods=['POST'])
+def api():
+    agent.setargs('01012022','04012022','normal',30)
+    agent.prepare()
+    
+    agent.thread = Thread(target=agent.generate(), daemon=True)
+    agent.thread.start()
+    return('true')
+
+
 
 class Agent():
     """ Main class for administering the agent """
-
     currenttime = 0
-    timeline = timeline
     timehit = False
+    thread = None
     
-    def __init__(self,start,stop,schedule,speed):
+    def __init__(self):
         # Command line arguments
-        self.start = start
-        self.stop = stop
-        self.schedule = schedule
-        self.speed = speed
-
         print('##################')
         self.browser = Browser()
         self.clock = Clock(0.1,2)
@@ -41,10 +49,19 @@ class Agent():
         sleep(2)
         #self.timeline = timeline
 
+
+    def setargs(self,start,stop,schedule,speed):
+        self.start = start
+        self.stop = stop
+        self.schedule = schedule
+        self.speed = speed
+        
     def prepare(self):
         try:
           self.system.disable_ntp()
           self.system.start_windump()
+          scheduler.gen_timeline(self.start, self.stop,'normal')
+          self.getTimeline()
         except Exception as e:
           print('BREAKING ERROR')
           raise SystemExit(e)
@@ -77,7 +94,7 @@ class Agent():
 
 
     def generate(self):
-        startday = 1640998800
+        startday = datetime.datetime.strptime(self.start, "%d/%m/%Y").timestamp()
         stopday = 1641254400
         try:
           self.clock.set_clock(startday)
@@ -86,12 +103,12 @@ class Agent():
         self.clock.start_time_machine()
         
         print(self.clock.currenttime)
-        print(len(timeline[0]['events']))
+        print(len(self.timeline[0]['events']))
         self.timeHit = False
-        for idx, day in enumerate(timeline):
+        for idx, day in enumerate(self.timeline):
           print('New day:')
           print(idx)
-          for event in timeline[idx]["events"]:
+          for event in self.timeline[idx]["events"]:
               print('New event:')
               print(json.dumps(event, indent=2))
               self.timeCheck(event["clock"][1])
@@ -111,19 +128,47 @@ class Agent():
   
     def getTimeline(self):
         print('getTimeline()')
-        #call generate timeline function
+        with open('timeline.json') as f:
+          self.timeline = json.load(f)
 
-if __name__ == '__main__':
+def isAdmin():
+    try:
+        is_admin = (os.getuid() == 0)
+    except AttributeError:
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+    return is_admin
+
+agent = Agent()
+
+if __name__ == '__main__':   
+    if isAdmin():
+        print("Is admin, continuing.")
+    else:
+        print("Administrator privileges are required to run this program.")
+        exit()
+        
+      # Argument for API
+    parser.add_argument('--api', action='count', default=0)
     # Argument for start and stop date in format ddmmyyyy, work schedule and multiplier speed
-    parser.add_argument('--start', type=int, required=True)
-    parser.add_argument('--stop', type=int, required=True)
-    parser.add_argument('--schedule', choices=['normal','247'], required=True) 
-    parser.add_argument('--speed', type=int, required=True)
-    args=parser.parse_args()
-    agent = Agent(args.start,args.stop,args.schedule,args.speed)
-    scheduler.gen_timeline('01/01/2022', '30/01/2022','normal')
-    agent.prepare()
+    parser.add_argument('--start', metavar='DD/MMY/YYY',help='Start date')
+    parser.add_argument('--stop',  metavar='DD/MM/YYYY',help='End date')
+    parser.add_argument('--schedule', choices=['normal','247'],help='Which work-schedule to use') 
+    parser.add_argument('--speed', help='Speed mult iplier (1-30)',metavar='{10-30}')
     
-    threading.Thread(target=agent.generate(), daemon=True).start()
+    #parse args
+    args=parser.parse_args()
+    if(args.api == 1):
+        print('API')
+        api_service = Thread(target=app.run,kwargs={'port':8080})
+        api_service.start()
+        print('api stopped')
+
+    else:
+        if None in (args.start,args.stop,args.schedule,args.speed):
+            print('Missing arguments. Check --help for more info')
+        else:
+            agent.setargs(args.start,args.stop,args.schedule,args.speed)
+            agent.prepare()
+            agent.thread = Thread(target=agent.generate(), daemon=True).start()
     agent.system.enable_ntp()
-    print('END OF MAIN')
+    print('END')

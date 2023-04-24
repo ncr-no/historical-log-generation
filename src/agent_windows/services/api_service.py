@@ -16,5 +16,3 @@ def stop():
         return 'Stopped'
     except:
         return 'Error stopping generation'
-    
-app.run(port=8080,threaded=True)
