@@ -13,7 +13,7 @@ class System():
       """
         What:     Start subprocess
         Purpose:  Start the capture of packets with windump
-       
+        Will rotate capture-file every 1GB. 1000 * 1M bytes = 1G with -C flag
       """
       
       try:
