@@ -22,7 +22,7 @@ class System():
         
         #Windump path using fullpath of this file:
         wdump_path = os.path.dirname(full_path) + '\\windump.exe'
-        self.capture = subprocess.Popen([wdump_path, '-i','3','-w','captured.pcap','-C','1000'],
+        self.capture = subprocess.Popen([wdump_path, '-i','3', '-s','0','-w','captured.pcap','-C','1000'],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
         print(self.capture)

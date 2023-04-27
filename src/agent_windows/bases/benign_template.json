@@ -8,8 +8,28 @@
         "done" : false,
         "options": [
             [
-                "https://vg.no",
-                "https://helseboka.no"
+                "medical news today",
+                "up to date medical information",
+                "healthcare guidelines",
+                "medical conferences 2023",
+                "clinical trials",
+                "best hospitals",
+                "patient management software",
+                "medical device reviews",
+                "evidence-based medicine resources",
+                "medical journal articles",
+                "healthcare podcasts",
+                "continuing medical education",
+                "medical coding resources",
+                "hospital administration best practices",
+                "telemedicine software",
+                "healthcare IT solutions",
+                "medical malpractice insurance",
+                "palliative care resources",
+                "medical equipment suppliers",
+                "public health statistics",
+                "medical billing software",
+                "medical research funding opportunities"
             ]
         ]
     },
@@ -22,9 +42,29 @@
         "done" : false,
         "options": [
             [
-                "how to make a cake",
-                "how to tame a dragon"
-            ]
+                "medical news today",
+                "up to date medical information",
+                "healthcare guidelines",
+                "medical conferences 2023",
+                "clinical trials in",
+                "best hospitals in",
+                "patient management software",
+                "medical device reviews",
+                "evidence-based medicine resources",
+                "medical journal articles",
+                "healthcare podcasts",
+                "continuing medical education",
+                "medical coding resources",
+                "hospital administration best practices",
+                "telemedicine software",
+                "healthcare IT solutions",
+                "medical malpractice insurance",
+                "palliative care resources",
+                "medical equipment suppliers",
+                "public health statistics",
+                "medical billing software",
+                "medical research funding opportunities"
+          ]
         ]
     }
 ]
