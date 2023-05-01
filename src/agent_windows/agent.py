@@ -56,9 +56,11 @@ class Agent():
         self.schedule = schedule
         self.speed = speed
         
+
     def prepare(self):
         try:
           self.system.disable_ntp()
+          self.system.set_capture_mode()
           scheduler.gen_timeline(self.start, self.stop,'normal')
           self.getTimeline()
         except Exception as e:
@@ -74,11 +76,13 @@ class Agent():
         """
         return
     
+
     def get_system_info(self):
         #hostname = platform.uname()[1]
         hostname = socket.gethostname()
         fqdn = socket.getfqdn()
         return hostname,fqdn
+
 
     def timeCheck(self,eventTime):
         while not self.timeHit:
@@ -103,17 +107,13 @@ class Agent():
         self.clock.start_time_machine()
         self.system.start_windump()
         self.timeHit = False
+
         for idx, day in enumerate(self.timeline):
-          print('Looking for events at day:')
-          print(idx)
+          print('Looking for events at day:',idx)
           for event in self.timeline[idx]["events"]:
-            
               print('New event:')
               print(json.dumps(event, indent=2))
               self.timeCheck(event["clock"][1])
-              #Time for event is hit:
-              #agent.system.stop_windump()
-
               self.clock.stop_time_machine()
               self.browser.search_google(event["options"][0])
               self.timeHit = False
@@ -152,7 +152,7 @@ if __name__ == '__main__':
     parser.add_argument('--start', metavar='DD/MMY/YYY',help='Start date')
     parser.add_argument('--stop',  metavar='DD/MM/YYYY',help='End date')
     parser.add_argument('--schedule', choices=['normal','247'],help='Which work-schedule to use') 
-    parser.add_argument('--speed', help='Speed mult iplier (1-30)',metavar='{10-30}')
+    parser.add_argument('--speed', help='Speed multiplier (1-30)',metavar='{10-30}')
     
     #parse args
     args=parser.parse_args()
@@ -169,6 +169,7 @@ if __name__ == '__main__':
             agent.setargs(args.start,args.stop,args.schedule,args.speed)
             agent.prepare()
             agent.thread = Thread(target=agent.generate(), daemon=True).start()
+
     agent.system.stop_windump()
     agent.system.enable_ntp()
     print('END')

@@ -74,11 +74,25 @@ class System():
            print('SYSTEM: NTP enabled')
            return True
 
+    def set_capture_mode(self):
+      """
+        What:     Disable the NTP sync service on Windows.
+        Purpose:  Make sure client does not sync during run.
+      """
+      try:
+        subprocess.run(r'powershell.exe Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\services\NPF -Name "TimestampMode" -Value 2', shell=True, check=True, stderr=subprocess.PIPE)
+      except Exception as e:
+        print('SYSTEM: ERR: Do you have WinPCAP installed?')
+        raise ValueError(e)
+      else:
+          print('SYSTEM: Set WinPCAP to QUERYSYSTEMTIME timestamp mode')
+          return True
+
 
 if __name__ == '__main__':
     system = System()
     try:
-      system.start_windump()
+      system.set_capture_mode()
     except Exception as e:
       raise SystemExit(e)
     else:
