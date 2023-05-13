@@ -29,26 +29,38 @@ class Browser():
         # Supress logging of various I/O units in Chrome
         self.options.add_experimental_option(
             'excludeSwitches', ['enable-logging'])
-
         # Create driver for Chrome (can be created for Firefox if desired )
 
     
-    def browse_url(self, url):
+    def browse_url(self, argumenter):
+        print(argumenter)
+        url = argumenter[0]
         driver = webdriver.Chrome(service=Service(
             ChromeDriverManager().install()), options=self.options)
         """ Function for browsing a specific webpage """
-        self.driver.get(url)
-        time.sleep(7)
+        print(url)
+        try:
+          driver.get(url)
+        except:
+          print('Error opening driver')
+          return
+        
+        time.sleep(5)
         driver.close()
 
-    def search_google(self, query):
+    def search_google(self, argumenter):
+        print(argumenter)
+        query = argumenter[0]
         driver = webdriver.Chrome(service=Service(
             ChromeDriverManager().install()), options=self.options)
         
         """ Function for searching google """
         print("Searching google for: " + query)
-        driver.get("https://www.google.no")
-
+        try:
+          driver.get("https://www.google.no")
+        except:
+          print('Error opening driver')
+          return
         # New browser, have to accept ToC
         try:
             WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "L2AGLb")))
@@ -117,4 +129,4 @@ class Browser():
 
 if __name__ == '__main__':
     browser = Browser()
-    browser.search_google("how to slay a dragon")
+    browser.browse_url(["https://www.ahrq.gov"])

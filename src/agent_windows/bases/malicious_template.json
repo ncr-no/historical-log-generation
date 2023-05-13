@@ -8,12 +8,10 @@
         "done" : false,
         "options": [
             [
-                "https://c2.com/collector",
-                "https://webhook.site/#!/5e31bc6a-6bda-4411-b138-d65a33ed7277"
+                "https://webhook.site/c926c08d-0882-478e-8170-06740db5a159"
             ],
             [
-                "documents.zip",
-                "classified_files.tar.gz"
+                "secret.zip"
             ]
         ]
     },
@@ -26,8 +24,8 @@
         "done" : false,
         "options": [
             [
-                "https://c2.com/privesc.zip",
-                "https://c2.com/linenum.sh"
+                "https://webhook.site/c926c08d-0882-478e-8170-06740db5a159/privesc.sh",
+                "https://webhook.site/c926c08d-0882-478e-8170-06740db5a159/winenum.sh"
             ]
         ]
     }

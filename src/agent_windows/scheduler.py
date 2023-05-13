@@ -79,7 +79,7 @@ def gen_timeline(start,end,schedule):
                 day['events'] = sorted(day['events'],key=lambda x: x['clock'][1])
 
             # Generate malicious events if any
-            if(random.randint(0,100) < 10):
+            if(random.randint(0,100) < 50):
                 # Generating malicious event
                 tmp_event = get_event('malicious',start_time + datetime.timedelta(days=n,hours=random.choice([21,22,23,1,2,3,4])))
                 day['events'].append(tmp_event)

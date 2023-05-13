@@ -3,7 +3,6 @@ import socket
 from flask import Flask
 from flask import request
 import argparse
-import sys
 import datetime
 import scheduler 
 from threading import Thread
@@ -11,6 +10,7 @@ import ctypes, os
 from time import sleep
 from modules.clock import Clock
 from modules.browser import Browser
+from modules.powershell import Powershell
 from services.system_service import System
 
 app = Flask(__name__)
@@ -115,7 +115,9 @@ class Agent():
               print(json.dumps(event, indent=2))
               self.timeCheck(event["clock"][1])
               self.clock.stop_time_machine()
-              self.browser.search_google(event["options"][0])
+
+              self.dynamic_call(event["module"], event["method"], event["options"])
+
               self.timeHit = False
               self.clock.start_time_machine()
 
@@ -129,6 +131,36 @@ class Agent():
         print('getTimeline()')
         with open('timeline.json') as f:
           self.timeline = json.load(f)
+
+    def dynamic_call(self, module, method, options):
+      # Call a function dynamically based on the module and method name
+
+      # Create a dictionary that maps module names to instances
+      modules = {
+          'browser': Browser(),
+          'powershell': Powershell()
+      }
+
+      # Get the module instance and method
+      module_instance = modules.get(module, None)
+      
+      # Check if the module exists
+      if not module_instance:
+          print(f"No such module: {module}")
+          return
+
+      # Get the method from the class based on the supplied method name
+      method_to_call = getattr(module_instance, method, None)
+
+      #Check if the method exists
+      if not method_to_call:
+          print(f"No such method: {method} in module: {module}")
+          return
+
+      # Call the method with arguments
+      method_to_call(options)
+
+
 
 def isAdmin():
     try:
@@ -165,6 +197,7 @@ if __name__ == '__main__':
     else:
         if None in (args.start,args.stop,args.schedule,args.speed):
             print('Missing arguments. Check --help for more info')
+            exit()
         else:
             agent.setargs(args.start,args.stop,args.schedule,args.speed)
             agent.prepare()
