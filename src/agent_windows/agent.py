@@ -98,8 +98,8 @@ class Agent():
 
     def generate(self):
         startday = datetime.datetime.strptime(self.start, "%d/%m/%Y").timestamp()
-        stopday = datetime.datetime.strptime(self.start + ' 23:59:59', "%d/%m/%Y %H:%M:%S").timestamp()
-        print(stopday)
+        stopday = datetime.datetime.strptime(self.stop + ' 23:59:59', "%d/%m/%Y %H:%M:%S").timestamp()
+        
         try:
           self.clock.set_clock(startday)
         except Exception as e:
