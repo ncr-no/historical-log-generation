@@ -46,7 +46,11 @@ class Browser():
           return
         
         time.sleep(5)
-        driver.close()
+        try:
+          driver.close()
+        except:
+          print('Error closing driver')
+          return
 
     def search_google(self, argumenter):
         print(argumenter)
