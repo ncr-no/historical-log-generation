@@ -15,12 +15,14 @@ class SetInterval(Timer):
 class Clock():
     time_machine = None
     currenttime = 2
-    def __init__(self,interval,shift):
-        self.interval = interval
-        self.shift = shift
+    def __init__(self):
+
         print('Class:Clock Initialized')
         self.currenttime = datetime.datetime.utcnow().timestamp()
-
+    def set_args(self, interval, shift):
+        self.interval = interval
+        self.shift = shift
+        
     def set_clock(self, epoch):
         time = datetime.datetime.fromtimestamp(epoch)
         try:

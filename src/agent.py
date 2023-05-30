@@ -24,7 +24,7 @@ os.environ['WDM_SSL_VERIFY']='0'
 
 @app.route('/create', methods=['POST'])
 def api():
-    agent.setargs('01012022','04012022','normal',30)
+    agent.setargs(request.args.get('start'),request.args.get('stop'),request.args.get('schedule'),request.args.get('speed'))
     agent.prepare()
     
     agent.thread = Thread(target=agent.generate(), daemon=True)
@@ -43,7 +43,7 @@ class Agent():
         # Command line arguments
         print('##################')
         self.browser = Browser()
-        self.clock = Clock(0.1,2)
+        self.clock = Clock()
         self.system = System()
         print('##################')
         sleep(2)
@@ -61,29 +61,13 @@ class Agent():
         try:
           self.system.disable_ntp()
           self.system.set_capture_mode()
-          scheduler.gen_timeline(self.start, self.stop,'normal')
+          scheduler.gen_timeline(self.start, self.stop,self.schedule)
           self.getTimeline()
         except Exception as e:
           print('BREAKING ERROR')
           raise SystemExit(e)
-
-
-    def register(self):
-        print('RUN')
-        """ 
-            Register at master. Send system name etc
-            Receive timeline of events
-        """
-        return
+  
     
-
-    def get_system_info(self):
-        #hostname = platform.uname()[1]
-        hostname = socket.gethostname()
-        fqdn = socket.getfqdn()
-        return hostname,fqdn
-
-
     def timeCheck(self,eventTime):
         while not self.timeHit:
             print('Client clock seconds until next event:',eventTime - int(self.clock.currenttime))
@@ -134,7 +118,6 @@ class Agent():
 
     def dynamic_call(self, module, method, options):
       # Call a function dynamically based on the module and method name
-
       # Create a dictionary that maps module names to instances
       modules = {
           'browser': Browser(),
@@ -159,7 +142,6 @@ class Agent():
 
       # Call the method with arguments
       method_to_call(options)
-
 
 
 def isAdmin():
@@ -199,7 +181,11 @@ if __name__ == '__main__':
             print('Missing arguments. Check --help for more info')
             exit()
         else:
+            if args.speed != "10" and args.speed != "20" and args.speed != "30":
+                print('Speed multiplier is not 10/20/30')
+                exit()
             agent.setargs(args.start,args.stop,args.schedule,args.speed)
+            agent.clock.set_args(0.1,args.speed)
             agent.prepare()
             agent.thread = Thread(target=agent.generate(), daemon=True).start()
 
