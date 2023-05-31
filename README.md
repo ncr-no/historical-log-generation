@@ -33,3 +33,7 @@ some cases where the guest systems on skyhigh synced its
 clock when NTP was completely disabled (and its NTP severs
 removed from registry). I didnt test, but its possible that
 disabling the W32Time service completely negates that problem. 
+
+The REST interface implemented for remote starting is just PoC, 
+and should be improved before implementation in production. Currently
+it is utilizing a simple Flask POST interface. 
