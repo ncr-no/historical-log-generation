@@ -14,6 +14,9 @@ The agent can be started directly on a client using CLI arguments
 An API interface is partly imlemented. It can be started with the 
 --api flag (none ofthe above options are required if API is activated)
 
+### Data:
+Data (PCAP and converted flows) found in the thesis can be downloaded on:
+https://ntnu.box.com/s/l9bfl718n5sg0c3irldypdnve5eb8m6a
 
 ### Future work:
 - Create a manager for starting the generator on all clients
